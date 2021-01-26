@@ -1,0 +1,57 @@
+_clones: &clones
+    before_install:
+      - git clone https://github.com/bitcoin-dot-org/Bitcoin.org
+      - git clone https://github.com/bitcoin-dot-org/developer.bitcoin.org
+      - git clone https://github.com/bitcoin-core/bitcoincore.org
+
+_shared_job: &shared_job
+    language: ruby
+    allow_failures:
+      rvm:
+        - 2.5
+        - 2.6
+    install:
+      - echo "shared install config"
+    env:
+      global:
+      - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+      - BITCOIN_ORG=https://github.com/bitcoin-dot-org/Bitcoin.org
+      - DEVELOPER_BITCOIN_ORG=https://github.com/bitcoin-dot-org/developer.bitcoin.org
+      - BITCCOINCORE_ORG=https://github.com/bitcoin-core/bitcoincore.org
+    branches:
+      only:
+        - master
+    notifications:
+      email:
+        - admin@bitcoincore.dev
+    cache: bundler
+
+jobs:
+  include:
+  - name: cibuild-org-builder
+    <<: *shared_job
+    after_install:
+      - echo "shared after_install config"
+    script: "script/cibuild-org-builder $(pwd) image"
+
+  - name: cibuild-bitcoin-org
+    <<: *clones
+    <<: *shared_job
+    after_install:
+      - echo "shared after_install config"
+    script: "script/cibuild-org-builder $(pwd)/Bitcoin.org image"
+
+  - name: cibuild-developer-bitcoin-org
+    <<: *clones
+    <<: *shared_job
+    after_install:
+      - echo "shared after_install config"
+    script: "script/cibuild-org-builder $(pwd)/developer.bitcoin.org image"
+
+  - name: cibuild-bitcoincore-org
+    <<: *clones
+    <<: *shared_job
+    after_install:
+      - echo "shared after_install config"
+    script: "script/cibuild-org-builder $(pwd)/bitcoincore.org image"
+

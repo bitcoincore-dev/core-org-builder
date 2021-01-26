@@ -1,0 +1,144 @@
+ARG RUBY_VERSION=2.5.8
+ARG ALPINE_VERSION=alpine3.12
+
+FROM ruby:${RUBY_VERSION}-${ALPINE_VERSION} as base
+ARG YOUR_REPO=Bitcoin.org
+ARG YOUR_FORK=bitcoin-dot-org
+
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+
+RUN echo **********************************************************************
+RUN echo INSTALL
+RUN echo **********************************************************************
+
+RUN apk --update add --no-cache --virtual build_deps build-base ruby-dev libc-dev linux-headers
+RUN apk add --no-cache git vim alpine-sdk build-base libc-dev linux-headers \
+bash bash-completion sudo su-exec libatomic readline readline-dev \
+libxml2 libxml2-dev ncurses-terminfo-base ncurses-terminfo \
+libxslt libxslt-dev zlib-dev zlib ruby ruby-dev yaml yaml-dev \
+libffi-dev nodejs ruby-io-console ruby-irb ruby-json ruby-rake ruby-dev build-base \
+  libxml2-dev libxslt-dev pcre-dev libffi-dev \
+  mariadb-dev postgresql-dev
+RUN apk add --no-cache build-base
+RUN apk add --update ruby-nokogiri
+
+##RUN echo install ruby-install
+##RUN wget -O ruby-install-0.8.1.tar.gz https://github.com/postmodern/ruby-install/archive/v0.8.1.tar.gz
+##RUN tar -xzvf ruby-install-0.8.1.tar.gz
+##RUN cd ruby-install-0.8.1/ && make && make install && ruby-install ruby \
+##$(curl https://raw.githubusercontent.com/${YOUR_FORK}/${YOUR_REPO}/master/.ruby-version)
+
+RUN echo 'gem: --no-document' >> .gemrc
+RUN echo 'verbose:   false'   >> .gemrc
+RUN echo 'benchmark: false'   >> .gemrc
+RUN echo 'backtrace: true'    >> .gemrc
+RUN bundle config --global jobs `expr $(nproc) - 1`
+
+## These are installed in a specific order ************************************
+RUN gem install rake:13.0.1
+RUN gem install RedCloth:4.3.2
+RUN gem install public_suffix:4.0.5
+RUN gem install colored:1.2
+RUN gem install commonjs:0.2.7
+RUN gem install concurrent-ruby:1.1.6
+RUN gem install em-websocket:0.5.1
+RUN gem install ffi:1.12.2
+RUN gem install ffi-icu:0.2.0
+
+RUN gem install nokogiri:1.10.9
+
+RUN gem install parallel:1.19.1
+RUN gem install typhoeus:0.8.0
+RUN gem install yell:2.2.2
+RUN gem install html-proofer:2.1.0
+RUN gem install i18n:1.8.2
+RUN echo Take a coffee break
+RUN gem install sassc:2.3.0
+RUN gem install eventmachine:1.2.7
+RUN gem install http_parser.rb:0.6.0
+RUN gem install em-websocket:0.5.2
+RUN gem install colorator:1.1.0
+RUN gem install jekyll
+RUN gem install execjs:2.7.0
+RUN gem install listen:3.2.1
+RUN gem install rouge:3.19.0
+RUN gem install terminal-table:1.8.0
+RUN gem install jekyll:4.0.1
+RUN gem install multi_json:1.14.1
+RUN gem install jshintrb:0.3.0
+RUN gem install json:2.3.0
+RUN gem install json-schema:2.8.1
+RUN gem install less:2.4.0
+RUN gem install libv8:3.16.14.19
+RUN gem install ref:2.0.0
+RUN gem install therubyracer:0.12.3
+#RUN gem install 
+#RUN gem install 
+#RUN gem install 
+#RUN gem install 
+#RUN gem install 
+#RUN gem install 
+#RUN gem install 
+#RUN gem install 
+#RUN gem install 
+#RUN gem install 
+RUN bundle config list
+## These are installed in a specific order ************************************
+
+
+RUN echo **********************************************************************
+RUN echo END INSTALL
+RUN echo **********************************************************************
+RUN echo **********************************************************************
+RUN echo END BASE
+RUN echo **********************************************************************
+FROM base as copy
+RUN echo **********************************************************************
+RUN echo BEGIN COPY
+RUN echo **********************************************************************
+COPY . /src/gh/pages-gem
+RUN echo **********************************************************************
+RUN echo END COPY
+RUN echo **********************************************************************
+FROM copy as bundle
+
+RUN bundle install --gemfile=/src/gh/pages-gem/Gemfile
+# one step to exclude .build_deps from docker cache
+RUN apk update && apk add --no-cache --virtual .build_deps \
+    make \
+    build-base && \
+    bundle config local.github-pages /src/gh/pages-gem && \
+    bundle install --gemfile=/src/gh/pages-gem/Gemfile
+
+RUN rm -rf /usr/lib/ruby/gems/*/cache/*.gem
+RUN rm -rf /root/src /tmp/* /usr/share/man /var/cache/apk/*
+RUN apk del build-base zlib-dev ruby-dev readline-dev yaml-dev libffi-dev libxml2-dev
+RUN apk search --update
+
+FROM bundle as run
+
+WORKDIR /src/site
+#REF: docs/setting-up-your-environment.md
+
+ARG PREVIEW_LANGS=en
+
+## Fast preview, takes less than 30 seconds
+#ENV ENABLED_PLUGINS=""
+ENV ENABLED_LANGS="${PREVIEW_LANGS}"
+
+## Fast build and tests, takes less than 50 seconds
+## Some tests may fail in fast mode; use -i to continue despite them
+#ENV ENABLED_PLUGINS=""
+ENV ENABLED_LANGS="${PREVIEW_LANGS}"
+
+## Slower (but still pretty fast) build and test
+ENV ENABLED_PLUGINS="events autocrossref"
+ENV ENABLED_LANGS="${PREVIEW_LANGS}"
+
+#CMD ["bundle","install","--user" ,"--system"]
+CMD ["bundle","install","--verbose"]
+#CMD ["bundle", "exec", "jekyll", "build", "--profile"]
+CMD ["bundle", "exec","jekyll", "serve","--incremental","-H", "0.0.0.0", "-P", "4000","--verbose", "--trace"]
+
