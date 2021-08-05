@@ -86,6 +86,30 @@ jobs:
           [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
           SITE=~/bitcoincore.org make image
 
+  macos-latest-make-image:
+    runs-on: macos-latest
+    steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
+      - name: make-image
+        run: |
+          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
+          make image
+
+  macos-latest-site-make-image:
+    runs-on: macos-latest
+    steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
+      - name: site-make-image
+        run: |
+          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
+          SITE=~/bitcoincore.org make image
+
   build:
     name: "GitHub Pages Tests"
     runs-on: ubuntu-latest
