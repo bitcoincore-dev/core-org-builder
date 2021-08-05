@@ -2,15 +2,7 @@
 name: workflows
 
 # Controls when the action will run. 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-
-  workflow_dispatch:
+on: [push, pull_request]
 
 jobs:
 
