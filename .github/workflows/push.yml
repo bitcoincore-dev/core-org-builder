@@ -86,6 +86,54 @@ jobs:
           [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
           SITE=~/bitcoincore.org make image
 
+  macos-11-make-image:
+    runs-on: macos-11
+    steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
+      - name: make-image
+        run: |
+          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
+          make image
+
+  macos-11-site-make-image:
+    runs-on: macos-11
+    steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
+      - name: site-make-image
+        run: |
+          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
+          SITE=~/bitcoincore.org make image
+
+  macos-10-15-make-image:
+    runs-on: macos-10-15
+    steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
+      - name: make-image
+        run: |
+          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
+          make image
+
+  macos-10-15-site-make-image:
+    runs-on: macos-10-15
+    steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
+      - name: site-make-image
+        run: |
+          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
+          SITE=~/bitcoincore.org make image
+
   build:
     name: "GitHub Pages Tests"
     runs-on: ubuntu-latest
@@ -100,7 +148,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: site-make-image
         run: |
-          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
+          [ -d ~/bitcoincore.org ] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
           SITE=~/bitcoincore.org make image
         env:
           RUBY_VERSION: ${{ matrix.ruby }}
