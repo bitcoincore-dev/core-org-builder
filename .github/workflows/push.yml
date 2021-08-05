@@ -3,68 +3,95 @@ name: workflows
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master ]
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+
+  github-workspace:
+    name: github-workspace
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Print github workspace
+        run: |
+          printenv
 
   ubuntu-site-make-image:
     runs-on: ubuntu-latest
     steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
       - uses: actions/checkout@v2
       - name: site-make-image
         run: |
-          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/bitcoincore-dev/bitcoincore.org.git ~/bitcoincore.org
+          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
           make image
 
   ubuntu-latest-site-make-image:
     runs-on: ubuntu-latest
     steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
       - uses: actions/checkout@v2
       - name: latest-site-make-image
         run: |
-          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/bitcoincore-dev/bitcoincore.org.git ~/bitcoincore.org
+          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
           SITE=~/bitcoincore.org make image
 
   ubuntu20-make-image:
     runs-on: ubuntu-20.04
     steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
       - uses: actions/checkout@v2
       - name: make-image
         run: |
-          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/bitcoincore-dev/bitcoincore.org.git ~/bitcoincore.org
+          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
           make image
 
   ubuntu20-site-make-image:
     runs-on: ubuntu-20.04
     steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
       - uses: actions/checkout@v2
       - name: site-make-image
         run: |
-          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/bitcoincore-dev/bitcoincore.org.git ~/bitcoincore.org
+          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
           SITE=~/bitcoincore.org make image
 
   ubuntu18-make-image:
     runs-on: ubuntu-18.04
     steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
       - uses: actions/checkout@v2
       - name: make-image
         run: |
-          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/bitcoincore-dev/bitcoincore.org.git ~/bitcoincore.org
+          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
           make image
 
   ubuntu18-site-make-image:
     runs-on: ubuntu-18.04
     steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
       - uses: actions/checkout@v2
       - name: site-make-image
         run: |
-          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/bitcoincore-dev/bitcoincore.org.git ~/bitcoincore.org
+          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
           SITE=~/bitcoincore.org make image
 
   build:
@@ -75,10 +102,13 @@ jobs:
         ruby:
           - 2.5.8
     steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
       - uses: actions/checkout@v2
       - name: site-make-image
         run: |
-          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/bitcoincore-dev/bitcoincore.org.git ~/bitcoincore.org
+          [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
           SITE=~/bitcoincore.org make image
         env:
           RUBY_VERSION: ${{ matrix.ruby }}
