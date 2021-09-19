@@ -80,6 +80,7 @@ report: test
 	@echo '        - HOME=${HOME}'
 	@echo '        - PWD=${PWD}'
 	@echo '        - SITE=${SITE}'
+	@echo '        - TAG=${TAG}'
 	@echo '        - ALPINE_VERSION=${ALPINE_VERSION}'
 	@echo '        - GIT_USER_NAME=${GIT_USER_NAME}'
 	@echo '        - GIT_USER_EMAIL=${GIT_USER_EMAIL}'
@@ -105,7 +106,8 @@ export DOCKER
 ifeq ($(SITE),)
     #SITE       :=  $(PWD)
     SITE       :=$(HOME)/bitcoincore.org
-    TAG        := core-org-builder
+    export     SITE
+    TAG        := $(shell echo $(notdir $(SITE)) | awk '{print tolower($$0)}')
 else
     SITE       := $(SITE)
     TAG        := $(shell echo $(notdir $(SITE)) | awk '{print tolower($$0)}')
