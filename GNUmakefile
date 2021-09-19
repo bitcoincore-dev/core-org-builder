@@ -21,10 +21,16 @@ GIT_USER_EMAIL							:= $(shell git config user.email)
 export GIT_USER_EMAIL
 GIT_SERVER								:= https://github.com
 export GIT_SERVER
-GIT_PROFILE								:= bitcoincore-dev
+ifeq ($(profile),)
+GIT_PROFILE								:= bitcoin-core
+else
+GIT_PROFILE								:= $(profile)
+endif
 export GIT_PROFILE
+
 GIT_BRANCH								:= $(shell git rev-parse --abbrev-ref HEAD)
 export GIT_BRANCH
+
 GIT_HASH								:= $(shell git rev-parse HEAD)
 export GIT_HASH
 GIT_REPO_ORIGIN							:= $(shell git remote get-url origin)
@@ -72,6 +78,9 @@ help: test
 	@echo '		SITE=~/bitcoincore.org make server nocache=false verbose=true'
 	@echo '		SITE=~/bitcoincore.org make image server'
 	@echo '		SITE=~/bitcoincore.org make image server nocache=true verbose=true'
+	@echo ''
+	@echo '	[FLAGS]:'
+	@echo '		SITE=~/bitcoincore.org make image profile=bitcoin-core serve'
 	@echo ''
 
 .PHONY: report
@@ -123,7 +132,8 @@ image:test image_alpine
 	${DOCKER} build -t ${TAG} .
 .PHONY: image_alpine
 image_alpine:
-	${DOCKER} build --build-arg VERBOSE=${VERBOSE} --build-arg NOCACHE=$(NOCACHE) -t ${TAG} . -f Dockerfile.alpine
+	${DOCKER} build --build-arg VERBOSE=${VERBOSE} --build-arg NOCACHE=$(NOCACHE) --build-arg GIT_PROFILE=${GIT_PROFILE} \
+		-t ${TAG} . -f Dockerfile.alpine
 .PHONY: shell
 shell:
 	${DOCKER} run --rm -it \

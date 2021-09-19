@@ -15,6 +15,7 @@ jobs:
     steps:
       - name: Print github workspace
         run: |
+          make
           printenv
 
   ubuntu-site-make-image:
@@ -27,7 +28,7 @@ jobs:
       - name: site-make-image
         run: |
           [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
-          make image
+          make image profile=bitcoincore-dev
 
   ubuntu-latest-site-make-image:
     runs-on: ubuntu-latest
@@ -39,7 +40,7 @@ jobs:
       - name: latest-site-make-image
         run: |
           [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
-          SITE=~/bitcoincore.org make image
+          SITE=~/bitcoincore.org make image profile=bitcoincore-dev
 
   ubuntu20-make-image:
     runs-on: ubuntu-20.04
@@ -51,7 +52,7 @@ jobs:
       - name: make-image
         run: |
           [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
-          make image
+          make image profile=bitcoincore-dev
 
   ubuntu20-site-make-image:
     runs-on: ubuntu-20.04
@@ -63,7 +64,7 @@ jobs:
       - name: site-make-image
         run: |
           [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
-          SITE=~/bitcoincore.org make image
+          SITE=~/bitcoincore.org make image profile=bitcoincore-dev
 
   ubuntu18-make-image:
     runs-on: ubuntu-18.04
@@ -75,7 +76,7 @@ jobs:
       - name: make-image
         run: |
           [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
-          make image
+          make image profile=bitcoincore-dev
 
   ubuntu18-site-make-image:
     runs-on: ubuntu-18.04
@@ -87,7 +88,7 @@ jobs:
       - name: site-make-image
         run: |
           [[ -d ~/bitcoincore.org ]] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
-          SITE=~/bitcoincore.org make image
+          SITE=~/bitcoincore.org make image profile=bitcoincore-dev
 
   ruby-2-5-5-8:
     name: "ruby-2-5-5/8"
@@ -105,7 +106,7 @@ jobs:
       - name: site-make-image
         run: |
           [ -d ~/bitcoincore.org ] || git clone https://github.com/$GITHUB_REPOSITORY_OWNER/bitcoincore.org.git ~/bitcoincore.org
-          SITE=~/bitcoincore.org make image
+          SITE=~/bitcoincore.org make image profile=bitcoincore-dev
         env:
           RUBY_VERSION: ${{ matrix.ruby }}
 
