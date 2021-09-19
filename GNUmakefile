@@ -21,6 +21,7 @@ GIT_USER_EMAIL							:= $(shell git config user.email)
 export GIT_USER_EMAIL
 GIT_SERVER								:= https://github.com
 export GIT_SERVER
+
 ifeq ($(profile),)
 GIT_PROFILE								:= bitcoin-core
 else
@@ -132,8 +133,7 @@ image:test image_alpine
 	${DOCKER} build -t ${TAG} .
 .PHONY: image_alpine
 image_alpine:
-	${DOCKER} build --build-arg VERBOSE=${VERBOSE} --build-arg NOCACHE=$(NOCACHE) --build-arg GIT_PROFILE=${GIT_PROFILE} \
-		-t ${TAG} . -f Dockerfile.alpine
+	$(DOCKER) build --build-arg VERBOSE=$(VERBOSE) --build-arg NOCACHE=$(NOCACHE) --build-arg GIT_PROFILE=$(GIT_PROFILE) -t $(TAG) . -f Dockerfile.alpine
 .PHONY: shell
 shell:
 	${DOCKER} run --rm -it \
@@ -153,7 +153,7 @@ server: image
 		-p $(PUBLIC_PORT):4000 \
 		-u `id -u`:`id -g` \
 		-v ${PWD}/docs:/src/gh/pages-gem \
-		-v `realpath ${SITE}`:/src/site \
+		-v `realpath $(SITE)`:/src/site \
 		-w /src/site \
 		${TAG}
 	|| echo 'Image(s) for "$(TAG)" does not exist.'

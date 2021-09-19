@@ -43,8 +43,6 @@ ENV NOCACHE=${NOCACHE}
 ENV VERBOSE=${VERBOSE}
 ENV PUBLIC_PORT=${PUBLIC_PORT}
 
-FROM base as install
-
 RUN apk --update add ${NOCACHE} --virtual build_deps build-base ruby-dev libc-dev linux-headers
 RUN apk add ${NOCACHE} git vim alpine-sdk build-base libc-dev linux-headers \
 bash bash-completion sudo su-exec libatomic readline readline-dev \
@@ -76,7 +74,7 @@ RUN gem install jekyll
 RUN gem install html-proofer
 RUN bundle config list
 
-FROM install as copy
+FROM base as copy
 COPY . /src/gh/pages-gem
 FROM copy as bundle
 RUN bundle install --gemfile=/src/gh/pages-gem/Gemfile
@@ -101,7 +99,7 @@ RUN rm -rf /root/src /tmp/* /usr/share/man /var/cache/apk/*
 RUN apk del build-base zlib-dev ruby-dev readline-dev yaml-dev libffi-dev libxml2-dev
 RUN apk search --update
 
-FROM bundle as run
+FROM base as run
 
 WORKDIR /src/site
 #REF: docs/setting-up-your-environment.md
