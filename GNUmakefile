@@ -119,7 +119,7 @@ image:test image_alpine
 	${DOCKER} build -t ${TAG} .
 .PHONY: image_alpine
 image_alpine:
-	${DOCKER} build -t ${TAG} . -f Dockerfile.alpine
+	${DOCKER} build $(VERBOSE) $(NOCACHE) -t ${TAG} . -f Dockerfile.alpine
 .PHONY: shell
 shell:
 	${DOCKER} run --rm -it \

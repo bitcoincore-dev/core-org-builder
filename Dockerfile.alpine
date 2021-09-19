@@ -1,5 +1,5 @@
 ARG RUBY_VERSION=2.5.8
-ARG ALPINE_VERSION=alpine3.12
+ARG ALPINE_VERSION=alpine3.13
 
 FROM ruby:${RUBY_VERSION}-${ALPINE_VERSION} as base
 ARG YOUR_REPO=bitcoincore.org
@@ -47,15 +47,15 @@ RUN echo **********************************************************************
 RUN echo INSTALL
 RUN echo **********************************************************************
 
-RUN apk --update add --no-cache --virtual build_deps build-base ruby-dev libc-dev linux-headers
-RUN apk add --no-cache git vim alpine-sdk build-base libc-dev linux-headers \
+RUN apk --update add ${NOCACHE} --virtual build_deps build-base ruby-dev libc-dev linux-headers
+RUN apk add ${NOCACHE} git vim alpine-sdk build-base libc-dev linux-headers \
 bash bash-completion sudo su-exec libatomic readline readline-dev \
 libxml2 libxml2-dev ncurses-terminfo-base ncurses-terminfo \
 libxslt libxslt-dev zlib-dev zlib ruby ruby-dev yaml yaml-dev \
 libffi-dev nodejs ruby-io-console ruby-irb ruby-json ruby-rake ruby-dev build-base \
   libxml2-dev libxslt-dev pcre-dev libffi-dev \
   mariadb-dev postgresql-dev
-RUN apk add --no-cache build-base
+RUN apk add ${NOCACHE} build-base
 RUN apk add --update ruby-nokogiri
 
 RUN gem update --system
@@ -65,6 +65,8 @@ RUN gem update bundler
 
 RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/master/Gemfile -o bitcoincore.org.gemfile
 RUN bundle install --gemfile=bitcoincore.org.gemfile
+
+RUN gem install faraday>=1.7.2
 
 RUN echo 'gem: --no-document' >> .gemrc
 RUN echo 'verbose:   false'   >> .gemrc
@@ -152,7 +154,7 @@ FROM copy as bundle
 RUN bundle install --gemfile=/src/gh/pages-gem/Gemfile
 # one step to exclude .build_deps from docker cache
 RUN apk add curl
-RUN apk update && apk add --no-cache --virtual .build_deps \
+RUN apk update && apk add ${NOCACHE} --virtual .build_deps \
     make \
     build-base && \
     bundle config local.github-pages /src/gh/pages-gem && \
