@@ -62,6 +62,8 @@ help: test
 	@echo ''
 	@echo '		make help'
 	@echo '		make report'
+	@echo '		make image nocache=false - rebuild image'
+	@echo '		make image verbose=true  - pass --no-cache to apk add'
 	@echo '		make image server nocache=false verbose=true'
 	@echo ''
 	@echo '	[EXAMPLES]:'
@@ -69,7 +71,7 @@ help: test
 	@echo '		SITE=~/bitcoincore.org make server'
 	@echo '		SITE=~/bitcoincore.org make server nocache=false verbose=true'
 	@echo '		SITE=~/bitcoincore.org make image server'
-	@echo '		SITE=~/bitcoincore.org make image server nocache=false verbose=true'
+	@echo '		SITE=~/bitcoincore.org make image server nocache=true verbose=true'
 	@echo ''
 
 .PHONY: report
@@ -121,7 +123,7 @@ image:test image_alpine
 	${DOCKER} build -t ${TAG} .
 .PHONY: image_alpine
 image_alpine:
-	${DOCKER} build $(VERBOSE) $(NOCACHE) -t ${TAG} . -f Dockerfile.alpine
+	${DOCKER} build --build-arg VERBOSE=${VERBOSE} --build-arg NOCACHE=$(NOCACHE) -t ${TAG} . -f Dockerfile.alpine
 .PHONY: shell
 shell:
 	${DOCKER} run --rm -it \
