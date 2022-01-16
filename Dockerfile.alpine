@@ -59,8 +59,13 @@ RUN gem install ${VERBOSE} bundler -v 1.17.3
 RUN gem install ${VERBOSE} bundler -v 2.1.4
 RUN gem update  ${VERBOSE} bundler
 
-RUN curl https://raw.githubusercontent.com/${GIT_PROFILE}/bitcoincore.org/v0.1.1/Gemfile -o bitcoincore.org.gemfile
-RUN bundle install --gemfile=bitcoincore.org.gemfile
+#RUN curl https://raw.githubusercontent.com/${GIT_PROFILE}/bitcoincore.org/v0.1.1/Gemfile -o bitcoincore.org.gemfile
+#RUN curl https://raw.githubusercontent.com/${GIT_PROFILE}/bitcoincore.org/master/Gemfile -o bitcoincore.org.gemfile
+#RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/master/Gemfile -o bitcoincore.org.gemfile
+#RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/1641442476-test-pr-833/Gemfile -o bitcoincore.org.gemfile
+#RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/1641442476-test-pr-833/Gemfile -o Gemfile
+#RUN bundle install --gemfile=Gemfile
+#RUN bundle install --gemfile=bitcoincore.org.gemfile
 
 RUN gem install faraday>=1.7.2
 
@@ -84,7 +89,6 @@ RUN apk update && apk add ${NOCACHE} --virtual .build_deps \
     make \
     build-base && \
     bundle config local.github-pages /src/gh/pages-gem && \
-    bundle install --gemfile=/src/gh/pages-gem/Gemfile && \
 
     #curl https://raw.githubusercontent.com/bitcoincore-dev/core-org-builder/master/Gemfile -o core-org-builder.gemfile && \
     #curl https://raw.githubusercontent.com/bitcoincore-dev/core-org-builder/master/docs/Gemfile -o core-org-builder.docs.gemfile && \
@@ -92,6 +96,8 @@ RUN apk update && apk add ${NOCACHE} --virtual .build_deps \
     #bundle install --gemfile=core-org-builder.gemfile && \
     #bundle install --gemfile=core-org-builder.docs.gemfile && \
     #bundle install --gemfile=org-bitcoincore.gemfile && \
+
+    bundle install --gemfile=/src/gh/pages-gem/Gemfile && \
     echo
 
 RUN rm -rf /usr/lib/ruby/gems/*/cache/*.gem
@@ -119,7 +125,9 @@ ENV PUBLIC_PORT=${PUBLIC_PORT}
 ## Slower (but still pretty fast) build and test
 ENV ENABLED_PLUGINS="events autocrossref"
 ENV ENABLED_LANGS="${PREVIEW_LANGS}"
+
 CMD ["bundle","install","--user" ,"--system", "--gemfile=Gemfile"]
+
 CMD ["bundle","install","--verbose"]
 CMD ["bundle", "exec", "jekyll", "build", "--profile"]
 CMD ["bundle", "exec","jekyll", "serve","--incremental","-H", "0.0.0.0", "-P", "4000","--verbose", "--trace"]
