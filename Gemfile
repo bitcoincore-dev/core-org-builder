@@ -1,21 +1,16 @@
-# frozen_string_literal: true
+source 'https://rubygems.org'
 
-source "https://rubygems.org"
+## This version should match the version in Debian Stable.
+## If you update the version here, also update it in .ruby-version, .travis.yml
+## and README.md. Then push your branch and make sure Travis supports that
+## version.
+ruby '2.5.8'
 
-gem "github-pages", group: :jekyll_plugins
+## If you add a new Gem below, run `bundle install` to install it.
+group :development do
+  gem 'github-pages'
+end
 
-# Whitelisted plugins not included in runtime dependencies.
-gem "jekyll"
-gem "jekyll-octicons"
-gem "minimal-mistakes-jekyll"
-gem "jemoji"
-gem "jekyll-github-metadata"
-gem "jekyll-theme-cayman"
-gem "liquid-c"
-gem "jekyll-redirect-from"
-
-#group :test do
-#  gem "rubocop", "~> 0.79"
-#  gem "rubocop-performance"
-#  gem "webmock"
-#end
+group :testing do
+  gem 'html-proofer'
+end
