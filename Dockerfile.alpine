@@ -59,13 +59,8 @@ RUN gem install ${VERBOSE} bundler -v 1.17.3
 RUN gem install ${VERBOSE} bundler -v 2.1.4
 RUN gem update  ${VERBOSE} bundler
 
-RUN curl https://raw.githubusercontent.com/${GIT_PROFILE}/bitcoincore.org/v0.1.2/Gemfile -o bitcoincore.org.gemfile
-#RUN curl https://raw.githubusercontent.com/${GIT_PROFILE}/bitcoincore.org/master/Gemfile -o bitcoincore.org.gemfile
-#RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/master/Gemfile -o bitcoincore.org.gemfile
-#RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/1641442476-test-pr-833/Gemfile -o bitcoincore.org.gemfile
-#RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/1641442476-test-pr-833/Gemfile -o Gemfile
-#RUN bundle install --gemfile=Gemfile
-#RUN bundle install --gemfile=bitcoincore.org.gemfile
+RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/v0.1.2/Gemfile -o bitcoincore.org.gemfile
+RUN bundle install --gemfile=bitcoincore.org.gemfile
 
 RUN gem install faraday>=1.7.2
 
