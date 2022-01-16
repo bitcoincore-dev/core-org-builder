@@ -59,7 +59,7 @@ RUN gem install ${VERBOSE} bundler -v 1.17.3
 RUN gem install ${VERBOSE} bundler -v 2.1.4
 RUN gem update  ${VERBOSE} bundler
 
-#RUN curl https://raw.githubusercontent.com/${GIT_PROFILE}/bitcoincore.org/v0.1.1/Gemfile -o bitcoincore.org.gemfile
+RUN curl https://raw.githubusercontent.com/${GIT_PROFILE}/bitcoincore.org/v0.1.2/Gemfile -o bitcoincore.org.gemfile
 #RUN curl https://raw.githubusercontent.com/${GIT_PROFILE}/bitcoincore.org/master/Gemfile -o bitcoincore.org.gemfile
 #RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/master/Gemfile -o bitcoincore.org.gemfile
 #RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/1641442476-test-pr-833/Gemfile -o bitcoincore.org.gemfile
@@ -82,7 +82,10 @@ RUN bundle config list
 FROM base as copy
 COPY . /src/gh/pages-gem
 FROM copy as bundle
-RUN bundle install --gemfile=/src/gh/pages-gem/Gemfile
+WORKDIR /src/gh/pages-gem
+RUN bundle install
+#RUN bundle install --gemfile=/src/gh/pages-gem/Gemfile
+#RUN bundle install --gemfile=/src/gh/pages-gem/Gemfile.lockfile
 # one step to exclude .build_deps from docker cache
 RUN apk add curl
 RUN apk update && apk add ${NOCACHE} --virtual .build_deps \
