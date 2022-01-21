@@ -43,10 +43,6 @@ ENV NOCACHE=${NOCACHE}
 ENV VERBOSE=${VERBOSE}
 ENV PUBLIC_PORT=${PUBLIC_PORT}
 
-RUN echo **********************************************************************
-RUN echo INSTALL
-RUN echo **********************************************************************
-
 RUN apk --update add ${NOCACHE} --virtual build_deps build-base ruby-dev libc-dev linux-headers
 RUN apk add ${NOCACHE} git vim alpine-sdk build-base libc-dev linux-headers \
 bash bash-completion sudo su-exec libatomic readline readline-dev \
@@ -58,10 +54,13 @@ libffi-dev nodejs ruby-io-console ruby-irb ruby-json ruby-rake ruby-dev build-ba
 RUN apk add ${NOCACHE} build-base
 RUN apk add --update ruby-nokogiri
 
+FROM base as install-gems
+
 RUN gem update --system
 RUN gem install bundler -v 1.17.3
 RUN gem install bundler -v 2.1.4
 RUN gem update bundler
+RUN gem install jekyll
 
 #RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/master/Gemfile -o gemfile.temp
 #RUN temp=$(<gemfile.temp) && modified="${temp//2.5.5/2.5.8}" && echo $modified > bitcoincore.org.gemfile
@@ -72,14 +71,10 @@ RUN bundle install --gemfile=bitcoincore.org.gemfile
 RUN gem install faraday>=1.7.2
 
 RUN echo 'gem: --no-document' >> .gemrc
-RUN echo 'verbose:   false'   >> .gemrc
+RUN echo 'verbose:   true'   >> .gemrc
 RUN echo 'benchmark: false'   >> .gemrc
 RUN echo 'backtrace: true'    >> .gemrc
 RUN bundle config --global jobs `expr $(nproc)`
-
-#RUN gem install rake:13.0.1 RedCloth:4.3.2 public_suffix:4.0.5 colored:1.2 commonjs:0.2.7 concurrent-ruby:1.1.6 em-websocket:0.5.1 ffi:1.12.2 ffi-icu:0.2.0 nokogiri:1.10.9 parallel:1.19.1 typhoeus:0.8.0 yell:2.2.2 html-proofer:2.1.0 i18n:1.8.2
-#RUN echo Take a coffee break
-#RUN gem install sassc:2.3.0 eventmachine:1.2.7 http_parser.rb:0.6.0 em-websocket:0.5.2 colorator:1.1.0 jekyll execjs:2.7.0 listen:3.2.1 rouge:3.19.0 terminal-table:1.8.0 jekyll:4.0.1 multi_json:1.14.1 jshintrb:0.3.0 json:2.3.0 json-schema:2.8.1 less:2.4.0 libv8:3.16.14.19 ref:2.0.0 therubyracer:0.12.3 ethon:0.12.0 nokogiri:1.11.1 rexml:3.2.4 mini_portile2:2.5.0 rb-fsevent:0.10.4 nokogiri:1.10.4
 
 RUN gem install github-pages:202
 RUN gem install html-proofer:3.14.1
@@ -137,22 +132,20 @@ RUN gem install concurrent-ruby:1.1.5
 RUN gem install ruby-enum:0.7.2
 RUN gem install ffi:1.11.3
 RUN gem install faraday:0.17.0
-
-RUN gem install jekyll
 RUN gem install html-proofer
-
-#RUN gem install 
-#RUN gem install 
-#RUN gem install 
-#RUN gem install 
-#RUN gem install 
-## These were installed in a specific order ************************************
+RUN gem install parallel:1.19.1
+RUN gem install rainbow:3.0.0
+RUN gem install em-websocket:0.5.1
+RUN gem install ethon:0.12.0
+RUN gem install http_parser.rb:0.6.0
+RUN gem install execjs:2.7.0
 
 RUN bundle config list
-## These are installed in a specific order ************************************
 
-FROM base as copy
+FROM install-gems as copy
+
 COPY . /src/gh/pages-gem
+
 FROM copy as bundle
 RUN bundle install --gemfile=/src/gh/pages-gem/Gemfile
 # one step to exclude .build_deps from docker cache
