@@ -63,8 +63,10 @@ RUN gem install bundler -v 1.17.3
 RUN gem install bundler -v 2.1.4
 RUN gem update bundler
 
-RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/master/Gemfile -o gemfile.temp
-RUN temp=$(<gemfile.temp) && modified="${temp//2.5.5/2.5.8}" && echo $modified > bitcoincore.org.gemfile
+#RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/master/Gemfile -o gemfile.temp
+#RUN temp=$(<gemfile.temp) && modified="${temp//2.5.5/2.5.8}" && echo $modified > bitcoincore.org.gemfile
+#RUN cat bitcoincore.org.gemfile
+COPY bitcoincore.org.gemfile .
 RUN bundle install --gemfile=bitcoincore.org.gemfile
 
 RUN gem install faraday>=1.7.2
@@ -79,62 +81,62 @@ RUN bundle config --global jobs `expr $(nproc)`
 #RUN echo Take a coffee break
 #RUN gem install sassc:2.3.0 eventmachine:1.2.7 http_parser.rb:0.6.0 em-websocket:0.5.2 colorator:1.1.0 jekyll execjs:2.7.0 listen:3.2.1 rouge:3.19.0 terminal-table:1.8.0 jekyll:4.0.1 multi_json:1.14.1 jshintrb:0.3.0 json:2.3.0 json-schema:2.8.1 less:2.4.0 libv8:3.16.14.19 ref:2.0.0 therubyracer:0.12.3 ethon:0.12.0 nokogiri:1.11.1 rexml:3.2.4 mini_portile2:2.5.0 rb-fsevent:0.10.4 nokogiri:1.10.4
 
-#RUN gem install github-pages:202
-#RUN gem install html-proofer:3.14.1
-#RUN gem install activesupport:4.2.11.1
-#RUN gem install github-pages-health-check:1.16.1
-#RUN gem install jekyll:3.8.5
-#RUN gem install jekyll-avatar:0.6.0
-#RUN gem install jekyll-feed:0.11.0
-#RUN gem install jekyll-github-metadata:2.12.1
-#RUN gem install jekyll-mentions:1.4.1
-#RUN gem install jekyll-optional-front-matter:0.3.0
-#RUN gem install jekyll-readme-index:0.2.0
-#RUN gem install jekyll-redirect-from:0.14.0
-#RUN gem install jekyll-relative-links:0.6.0
-#RUN gem install jekyll-remote-theme:0.4.0
-#RUN gem install jekyll-seo-tag:2.5.0
-#RUN gem install jekyll-sitemap:1.2.0
-#RUN gem install jekyll-swiss:0.4.0
-#RUN gem install jekyll-theme-architect:0.1.1
-#RUN gem install jekyll-theme-cayman:0.1.1
-#RUN gem install jekyll-theme-dinky:0.1.1
-#RUN gem install jekyll-theme-hacker:0.1.1
-#RUN gem install jekyll-theme-leap-day:0.1.1
-#RUN gem install jekyll-theme-merlot:0.1.1
-#RUN gem install jekyll-theme-midnight:0.1.1
-#RUN gem install jekyll-theme-minimal:0.1.1
-#RUN gem install jekyll-theme-modernist:0.1.1
-#RUN gem install jekyll-theme-primer:0.5.3
-#RUN gem install jekyll-theme-slate:0.1.1
-#RUN gem install jekyll-theme-tactile:0.1.1
-#RUN gem install jekyll-theme-time-machine:0.1.1
-#RUN gem install jekyll-titles-from-headings:0.5.1
-#RUN gem install jemoji:0.10.2
-#RUN gem install kramdown:1.17.0
-#RUN gem install liquid:4.0.0
-#RUN gem install listen:3.1.5
-#RUN gem install minima:2.5.0
-#RUN gem install nokogiri:1.10.5
-#RUN gem install rouge:3.11.0
-#RUN gem install addressable:2.7.0
-#RUN gem install typhoeus:1.3.1
-#RUN gem install yell:2.2.0
-#RUN gem install minitest:5.13.0
-#RUN gem install tzinfo:1.2.5
-#RUN gem install dnsruby:1.61.3
-#RUN gem install octokit:4.14.0
-#RUN gem install public_suffix:3.1.1
-#RUN gem install html-pipeline:2.12.2
-#RUN gem install rubyzip:2.0.0
-#RUN gem install rb-fsevent:0.10.3
-#RUN gem install rb-inotify:0.10.0
-#RUN gem install ruby_dep:1.5.0
-#RUN gem install unicode-display_width:1.6.0
-#RUN gem install concurrent-ruby:1.1.5
-#RUN gem install ruby-enum:0.7.2
-#RUN gem install ffi:1.11.3
-#RUN gem install faraday:0.17.0
+RUN gem install github-pages:202
+RUN gem install html-proofer:3.14.1
+RUN gem install activesupport:4.2.11.1
+RUN gem install github-pages-health-check:1.16.1
+RUN gem install jekyll:3.8.5
+RUN gem install jekyll-avatar:0.6.0
+RUN gem install jekyll-feed:0.11.0
+RUN gem install jekyll-github-metadata:2.12.1
+RUN gem install jekyll-mentions:1.4.1
+RUN gem install jekyll-optional-front-matter:0.3.0
+RUN gem install jekyll-readme-index:0.2.0
+RUN gem install jekyll-redirect-from:0.14.0
+RUN gem install jekyll-relative-links:0.6.0
+RUN gem install jekyll-remote-theme:0.4.0
+RUN gem install jekyll-seo-tag:2.5.0
+RUN gem install jekyll-sitemap:1.2.0
+RUN gem install jekyll-swiss:0.4.0
+RUN gem install jekyll-theme-architect:0.1.1
+RUN gem install jekyll-theme-cayman:0.1.1
+RUN gem install jekyll-theme-dinky:0.1.1
+RUN gem install jekyll-theme-hacker:0.1.1
+RUN gem install jekyll-theme-leap-day:0.1.1
+RUN gem install jekyll-theme-merlot:0.1.1
+RUN gem install jekyll-theme-midnight:0.1.1
+RUN gem install jekyll-theme-minimal:0.1.1
+RUN gem install jekyll-theme-modernist:0.1.1
+RUN gem install jekyll-theme-primer:0.5.3
+RUN gem install jekyll-theme-slate:0.1.1
+RUN gem install jekyll-theme-tactile:0.1.1
+RUN gem install jekyll-theme-time-machine:0.1.1
+RUN gem install jekyll-titles-from-headings:0.5.1
+RUN gem install jemoji:0.10.2
+RUN gem install kramdown:1.17.0
+RUN gem install liquid:4.0.0
+RUN gem install listen:3.1.5
+RUN gem install minima:2.5.0
+RUN gem install nokogiri:1.10.5
+RUN gem install rouge:3.11.0
+RUN gem install addressable:2.7.0
+RUN gem install typhoeus:1.3.1
+RUN gem install yell:2.2.0
+RUN gem install minitest:5.13.0
+RUN gem install tzinfo:1.2.5
+RUN gem install dnsruby:1.61.3
+RUN gem install octokit:4.14.0
+RUN gem install public_suffix:3.1.1
+RUN gem install html-pipeline:2.12.2
+RUN gem install rubyzip:2.0.0
+RUN gem install rb-fsevent:0.10.3
+RUN gem install rb-inotify:0.10.0
+RUN gem install ruby_dep:1.5.0
+RUN gem install unicode-display_width:1.6.0
+RUN gem install concurrent-ruby:1.1.5
+RUN gem install ruby-enum:0.7.2
+RUN gem install ffi:1.11.3
+RUN gem install faraday:0.17.0
 
 RUN gem install jekyll
 RUN gem install html-proofer
@@ -194,8 +196,9 @@ ENV PUBLIC_PORT=${PUBLIC_PORT}
 ## Slower (but still pretty fast) build and test
 ENV ENABLED_PLUGINS="events autocrossref"
 ENV ENABLED_LANGS="${PREVIEW_LANGS}"
-CMD ["bundle","install","--user" ,"--system", "--gemfile=Gemfile"]
-CMD ["bundle","install","--verbose"]
+#CMD ["bundle","install","--user" ,"--system", "--gemfile=Gemfile"]
+CMD ["bundle","install"]
+#CMD ["bundle","install","--verbose"]
 CMD ["bundle", "exec", "jekyll", "build", "--profile"]
 CMD ["bundle", "exec","jekyll", "serve","--incremental","-H", "0.0.0.0", "-P", "4000","--verbose", "--trace"]
 

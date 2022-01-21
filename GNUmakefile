@@ -115,9 +115,14 @@ endif
     export     SITE
     export     TAG
 
+.PHONY: init
+init:
+	curl https://raw.githubusercontent.com/bitcoin-core/bitcoincore.org/master/Gemfile -o gemfile.temp
+	temp=$(<gemfile.temp) && modified="${temp//2.5.5/2.5.8}" && echo $(modified) > bitcoincore.org.gemfile
+
 # Build the docker image or create your own Dockerfile
 .PHONY: image
-image:test image_alpine
+image:test image_alpine init
 	${DOCKER} build -t ${TAG} .
 .PHONY: image_alpine
 image_alpine:
