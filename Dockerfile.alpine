@@ -64,7 +64,7 @@ RUN gem install bundler -v 2.1.4
 RUN gem update bundler
 
 RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/master/Gemfile -o gemfile.temp
-RUN temp=$(<gemfile.temp) && modified="${temp//2.5.5/2.5.8}" > bitcoincore.org.gemfile
+RUN temp=$(<gemfile.temp) && modified="${temp//2.5.5/2.5.8}" && echo $modified > bitcoincore.org.gemfile
 RUN bundle install --gemfile=bitcoincore.org.gemfile
 
 RUN gem install faraday>=1.7.2
