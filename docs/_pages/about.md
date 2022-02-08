@@ -26,14 +26,16 @@ Install [make](https://www.gnu.org/software/make/)
 
 ```
 git clone https://github.com/bitcoincore-dev/core-org-builder.git ~/core-org-builder
+cd ~/core-org-builder && git fetch origin 1644282724-ruby-2-7-alpine3-14
+git checkout 1644282724-ruby-2-7-alpine3-14
+
 git clone https://github.com/bitcoin-core/bitcoincore.org.git ~/bitcoincore.org
 
-cd core-org-builder
+cd ~/bitcoincore.org
+git remote add sjors https://github.com/Sjors/bitcoincore.org.git
+git fetch sjors && git checkout 2021/12/ruby
 
-make image
-make server
-
-OR
+cd ~/core-org-builder
 
 SITE=~/bitcoincore.org make image
 SITE=~/bitcoincore.org make server
