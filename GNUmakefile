@@ -55,21 +55,29 @@ PUBLIC_PORT								:=$(port)
 endif
 export PUBLIC_PORT
 
+ifeq ($(tag),)
+TAG                                    :=$(TIME)
+else
+TAG                                    :=$(tag)
+endif
+
+##      make  help: prints this help message
 .PHONY: help
 help: test
+	@echo "Usage: make [arg]"
 	@echo ''
-	@echo '	[USAGE]:	make [BUILD] run [EXTRA_ARGUMENTS]	'
+	@sed -n 's/^##//p' ${MAKEFILE_LIST} | column -t -s ':' |  sed -e 's/^/ /'
 	@echo ''
-	@echo '		make help'
-	@echo '		make report'
-	@echo '		make image server nocache=false verbose=true'
+	@echo '       make  report'
+	@echo '       make  image server nocache=false verbose=true'
+	@echo '       '
+	@echo '       [EXAMPLES]:'
+	@echo '       '
+	@echo '       SITE=~/bitcoincore.org make server'
+	@echo '       SITE=~/bitcoincore.org make server nocache=false verbose=true'
+	@echo '       SITE=~/bitcoincore.org make image server'
+	@echo '       SITE=~/bitcoincore.org make image server nocache=false verbose=true'
 	@echo ''
-	@echo '	[EXAMPLES]:'
-	@echo ''
-	@echo '		SITE=~/bitcoincore.org make server'
-	@echo '		SITE=~/bitcoincore.org make server nocache=false verbose=true'
-	@echo '		SITE=~/bitcoincore.org make image server'
-	@echo '		SITE=~/bitcoincore.org make image server nocache=false verbose=true'
 	@echo ''
 
 .PHONY: report
@@ -150,7 +158,6 @@ server: image
 		-w /src/site \
 		${TAG}
 	|| echo 'Image(s) for "$(TAG)" does not exist.'
-#######################
 .PHONY: clean
 clean:
 	@echo 'clean'
@@ -159,5 +166,4 @@ clean:
 	&& echo 'Image(1) for "$(TAG)" removed.' \
 	&& echo 'Image(2) for "$(TAG)" removed.' \
 	|| echo 'Image(3) for "$(TAG)" already removed.'
-#######################
 
