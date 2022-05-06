@@ -37,14 +37,14 @@ export GIT_REPO_PATH
 ifeq ($(nocache),true)
 NOCACHE								:= --no-cache
 else
-NOCACHE								:=	
+NOCACHE								:=
 endif
 export NOCACHE
 
 ifeq ($(verbose),true)
 VERBOSE									:= --verbose
 else
-VERBOSE									:=	
+VERBOSE									:=
 endif
 export VERBOSE
 
@@ -125,8 +125,13 @@ endif
 
 .PHONY: init
 init:
-	curl https://raw.githubusercontent.com/bitcoin-core/bitcoincore.org/master/Gemfile -o gemfile.temp
-	temp=$(<gemfile.temp) && modified="${temp//2.5.5/2.5.8}" && echo $(modified) > bitcoincore.org.gemfile
+	# curl https://raw.githubusercontent.com/$(GIT_PROFILE)/bitcoincore.org/master/Gemfile -o gemfile.temp
+	wget -L https://raw.githubusercontent.com/$(GIT_PROFILE)/bitcoincore.org/master/Gemfile
+	sed -e 's/2.5.5/2.7.4/g' Gemfile
+	cat Gemfile > bitcoincore.org.gemfile
+	wget -L https://raw.githubusercontent.com/$(GIT_PROFILE)/bitcoincore.org/master/Gemfile.lock
+	sed -e 's/2.5.5p157/2.7.4/g' Gemfile.lock
+	cat Gemfile.lock > bitcoincore.org.gemfile.lock
 
 # Build the docker image or create your own Dockerfile
 .PHONY: image
