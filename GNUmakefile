@@ -8,7 +8,7 @@ TIME									:= $(shell date +%s)
 export TIME
 
 ifeq ($(alpine),)
-ALPINE_VERSION							:= 3.11.6
+ALPINE_VERSION							:= 3.14
 else
 ALPINE_VERSION							:= $(alpine)
 endif
@@ -127,11 +127,12 @@ endif
 init:
 	# curl https://raw.githubusercontent.com/$(GIT_PROFILE)/bitcoincore.org/master/Gemfile -o gemfile.temp
 	wget -L https://raw.githubusercontent.com/$(GIT_PROFILE)/bitcoincore.org/master/Gemfile
-	sed -e 's/2.5.5/2.7.4/g' Gemfile bitcoincore.org.gemfile
-	cat bitcoincore.org.gemfile
+	sed -i "" 's/2.5.5/2.7.4/g' Gemfile
+	cat Gemfile
 	wget -L https://raw.githubusercontent.com/$(GIT_PROFILE)/bitcoincore.org/master/Gemfile.lock
-	sed -e 's/2.5.5p157/2.7.4/g' Gemfile.lock bitcoincore.org.gemfile.lock
-	cat bitcoincore.org.gemfile.lock
+	sed -i "" 's/2.5.5/2.7.4/g' Gemfile.lock
+	sed -i "" 's/p157//g' Gemfile.lock
+	cat Gemfile.lock
 
 # Build the docker image or create your own Dockerfile
 .PHONY: image
