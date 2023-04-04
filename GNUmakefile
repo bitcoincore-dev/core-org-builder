@@ -71,13 +71,12 @@ help: test
 	@echo '       make  report'
 	@echo '       make  image server nocache=false verbose=true'
 	@echo '       '
-	@echo '       [EXAMPLES]:'
-	@echo '       '
-	@echo '       SITE=~/bitcoincore.org make server'
-	@echo '       SITE=~/bitcoincore.org make server nocache=false verbose=true'
-	@echo '       SITE=~/bitcoincore.org make image server'
-	@echo '       SITE=~/bitcoincore.org make image server nocache=false verbose=true'
+	@echo '	[EXAMPLES]:'
 	@echo ''
+	@echo '		SITE=../bitcoincore.org make server'
+	@echo '		SITE=../bitcoincore.org make server nocache=false verbose=true'
+	@echo '		SITE=../bitcoincore.org make image server'
+	@echo '		SITE=../bitcoincore.org make image server nocache=false verbose=true'
 	@echo ''
 
 .PHONY: report
@@ -113,7 +112,7 @@ export DOCKER
 
 ifeq ($(SITE),)
     #SITE       :=  $(PWD)
-    SITE       :=$(HOME)/bitcoincore.org
+    SITE       :=..//bitcoincore.org
     export     SITE
     TAG        := $(shell echo $(notdir $(SITE)) | awk '{print tolower($$0)}')
 else

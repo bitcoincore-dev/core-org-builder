@@ -56,11 +56,12 @@ RUN apk add --update ruby-nokogiri
 
 FROM base as install-gems
 
-RUN gem update --system
+#RUN gem update --system
+RUN gem install public_suffix -v 4.0.7
 #RUN gem install bundler -v 1.17.3
 #RUN gem install bundler -v 2.1.4
-RUN gem install bundler
-RUN gem update bundler
+#RUN gem install bundler
+#RUN gem update bundler
 RUN gem install jekyll
 
 #RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/master/Gemfile -o gemfile.temp
