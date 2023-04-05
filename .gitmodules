@@ -1,0 +1,4 @@
+[submodule "bitcoincore.org"]
+	path = bitcoincore.org
+	url = git@github.com:bitcoincore-dev/bitcoincore.org.git
+	ignore = dirty
