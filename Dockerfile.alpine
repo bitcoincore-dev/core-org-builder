@@ -58,24 +58,12 @@ FROM base as install-gems
 
 #RUN gem update --system
 RUN gem install public_suffix -v 4.0.7
-#RUN gem install bundler -v 1.17.3
-#RUN gem install bundler -v 2.1.4
-#RUN gem install bundler
-#RUN gem update bundler
-RUN gem install jekyll
+RUN gem install faraday-net_http -v 2.1.0
+RUN gem install faraday -v 1.10.3
+RUN gem install jekyll -v 2.5.3
 
-#RUN curl https://raw.githubusercontent.com/bitcoincore-dev/bitcoincore.org/master/Gemfile -o gemfile.temp
-RUN curl https://github.com/Sjors/bitcoincore.org/tree/2021/12/ruby/Gemfile -o gemfile.temp
-#RUN temp=$(<gemfile.temp) && modified="${temp//2.5.5/2.5.8}" && echo $modified > bitcoincore.org.gemfile
-RUN temp=$(<gemfile.temp) && modified="${temp//2.7.4/2.7.4}" && echo $modified > bitcoincore.org.gemfile
-COPY bitcoincore.org.gemfile /src/gh/pages-gem/bitcoincore.org.gemfile
-#RUN cat bitcoincore.org.gemfile
-#COPY bitcoincore.org.gemfile .
-#RUN bundle update
-RUN bundle update  --gemfile=/src/gh/pages-gem/bitcoincore.org.gemfile
-RUN bundle install --gemfile=/src/gh/pages-gem/bitcoincore.org.gemfile
-
-RUN gem install faraday>=1.7.2
+COPY ./bitcoincore.org/Gemfile /src/gh/pages-gem/Gemfile
+RUN bundle update  --gemfile=/src/gh/pages-gem/Gemfile
 
 RUN echo 'gem: --no-document' >> .gemrc
 RUN echo 'verbose:   true'   >> .gemrc
