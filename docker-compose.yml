@@ -1,0 +1,23 @@
+version: '3.4'
+networks: {}
+services:
+  bitcoincore-org:
+    build:
+      context: .
+      dockerfile: Dockerfile.alpine
+    restart: unless-stopped
+    container_name: ${SITE}
+    environment:
+      TRIPLET: x86_64-linux-gnu
+    expose:
+    - '4000'
+    - '${PUBLIC_PORT}'
+    ports:
+    - ${PUBLIC_PORT}:4000
+    volumes:
+    - type: bind
+      source: ${PWD}/bitcoincore.org/
+      target: /src/site/
+    - type: bind
+      source: ${PWD}
+      target: /src/gh/pages-gem

@@ -62,8 +62,11 @@ RUN gem install faraday-net_http -v 2.1.0
 RUN gem install faraday -v 1.10.3
 RUN gem install jekyll -v 2.5.3
 
-#COPY ./bitcoincore.org/Gemfile /src/gh/pages-gem/Gemfile
-RUN bundle update  --gemfile=/src/gh/pages-gem/Gemfile
+VOLUME /src/gh/pages-gem
+VOLUME /src/site
+
+COPY ./bitcoincore.org/Gemfile /src/gh/pages-gem/Gemfile
+RUN bundle update --gemfile=/src/gh/pages-gem/Gemfile
 
 RUN echo 'gem: --no-document' >> .gemrc
 RUN echo 'verbose:   true'    >> .gemrc
@@ -205,10 +208,11 @@ ENV PUBLIC_PORT=${PUBLIC_PORT}
 ENV ENABLED_PLUGINS="events autocrossref"
 ENV ENABLED_LANGS="${PREVIEW_LANGS}"
 #CMD ["bundle","install","--user" ,"--system", "--gemfile=Gemfile"]
-#CMD ["bundle","install"]
+CMD ["bundle","install"]
 WORKDIR /src/gh/pages-gem
+CMD ["bundle","install"]
 # RUN  bundle install --gemfile=/src/gh/pages-gem/bitcoincore.org.gemfile
-CMD ["bundle","install","--verbose","--gemfile=/src/gh/pages-gem/bitcoincore.org.gemfile"]
+#CMD ["bundle","install","--verbose","--gemfile=/src/gh/pages-gem/bitcoincore.org.gemfile"]
 CMD ["bundle", "exec", "jekyll", "build", "--profile"]
 CMD ["bundle", "exec","jekyll", "serve","--incremental","-H", "0.0.0.0", "-P", "4000","--verbose", "--trace"]
 

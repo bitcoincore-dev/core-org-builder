@@ -68,6 +68,23 @@ SITE                                    :=$(SITE)
 endif
 export SITE
 
+DOCKER=$(shell which docker)
+export DOCKER
+DOCKER_COMPOSE=$(shell which docker-compose)
+export DOCKER_COMPOSE
+
+ifeq ($(SITE),)
+    #SITE       :=  $(PWD)
+    SITE       :=$(PWD)/bitcoincore.org
+    export     SITE
+    TAG        := $(shell echo $(notdir $(SITE)) | awk '{print tolower($$0)}')
+else
+    SITE       := $(SITE)
+    TAG        := $(shell echo $(notdir $(SITE)) | awk '{print tolower($$0)}')
+endif
+    export     SITE
+    export     TAG
+
 ##      make  help: prints this help message
 .PHONY: help
 help: test
@@ -85,6 +102,8 @@ help: test
 	@echo '		SITE=./bitcoincore.org make image server'
 	@echo '		SITE=./bitcoincore.org make image server nocache=false verbose=true'
 	@echo ''
+	@echo '		sudo -s make shell'
+	@echo '		SITE=./bitcoincore.org sudo -s make shell'
 
 .PHONY: report
 report: test
@@ -114,34 +133,22 @@ report: test
 test:
 	bash -c "test -e $(SITE) && echo '' || 'SITE=$(SITE) doesnt exist!'"
 
-DOCKER=docker
-export DOCKER
-
-ifeq ($(SITE),)
-    #SITE       :=  $(PWD)
-    SITE       :=..//bitcoincore.org
-    export     SITE
-    TAG        := $(shell echo $(notdir $(SITE)) | awk '{print tolower($$0)}')
-else
-    SITE       := $(SITE)
-    TAG        := $(shell echo $(notdir $(SITE)) | awk '{print tolower($$0)}')
-endif
-    export     SITE
-    export     TAG
-
 .PHONY: init
-init:
+init:submodules
 	curl https://raw.githubusercontent.com/bitcoin-core/bitcoincore.org/master/Gemfile -o gemfile.temp
 	temp=$(<gemfile.temp) && modified="${temp//2.5.5/2.5.8}" && echo $(modified) > bitcoincore.org.gemfile
-
+submodules:## 	git submodule update --init --recursive
+	@git submodule update --init --recursive
 # Build the docker image or create your own Dockerfile
 .PHONY: image
 image:test image_alpine init
 .PHONY: image_alpine
 image_alpine:
 	${DOCKER} build $(VERBOSE) $(NOCACHE) -t ${TAG} . -f Dockerfile.alpine
+	#${DOCKER_COMPOSE} build $(VERBOSE) $(NOCACHE) bitcoincore-org
 .PHONY: shell
 shell:
+	echo $(SITE)
 	${DOCKER} run --rm -it \
 		-p $(PUBLIC_PORT):4000 \
 		-u `id -u`:`id -g` \
