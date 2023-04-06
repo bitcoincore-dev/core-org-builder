@@ -8,7 +8,7 @@ TIME									:= $(shell date +%s)
 export TIME
 
 ifeq ($(alpine),)
-ALPINE_VERSION							:= 3.11.6
+ALPINE_VERSION							:= 3.9
 else
 ALPINE_VERSION							:= $(alpine)
 endif
@@ -61,6 +61,13 @@ else
 TAG                                    :=$(tag)
 endif
 
+ifeq ($(SITE),)
+SITE                                    :=$(PWD)/bitcoincore.org
+else
+SITE                                    :=$(SITE)
+endif
+export SITE
+
 ##      make  help: prints this help message
 .PHONY: help
 help: test
@@ -73,10 +80,10 @@ help: test
 	@echo '       '
 	@echo '	[EXAMPLES]:'
 	@echo ''
-	@echo '		SITE=../bitcoincore.org make server'
-	@echo '		SITE=../bitcoincore.org make server nocache=false verbose=true'
-	@echo '		SITE=../bitcoincore.org make image server'
-	@echo '		SITE=../bitcoincore.org make image server nocache=false verbose=true'
+	@echo '		SITE=./bitcoincore.org make server'
+	@echo '		SITE=./bitcoincore.org make server nocache=false verbose=true'
+	@echo '		SITE=./bitcoincore.org make image server'
+	@echo '		SITE=./bitcoincore.org make image server nocache=false verbose=true'
 	@echo ''
 
 .PHONY: report
@@ -130,7 +137,6 @@ init:
 # Build the docker image or create your own Dockerfile
 .PHONY: image
 image:test image_alpine init
-	${DOCKER} build -t ${TAG} .
 .PHONY: image_alpine
 image_alpine:
 	${DOCKER} build $(VERBOSE) $(NOCACHE) -t ${TAG} . -f Dockerfile.alpine
@@ -139,7 +145,7 @@ shell:
 	${DOCKER} run --rm -it \
 		-p $(PUBLIC_PORT):4000 \
 		-u `id -u`:`id -g` \
-		-v ${PWD}/docs:/src/gh/pages-gem \
+		-v ${PWD}/bitcoincore.org:/src/gh/pages-gem \
 		-v `realpath ${SITE}`:/src/site \
 		-w /src/site \
 		${TAG} \
@@ -152,7 +158,7 @@ server: image
 	${DOCKER} run --rm -it \
 		-p $(PUBLIC_PORT):4000 \
 		-u `id -u`:`id -g` \
-		-v ${PWD}/docs:/src/gh/pages-gem \
+		-v ${PWD}/bitcoincore.org:/src/gh/pages-gem \
 		-v `realpath ${SITE}`:/src/site \
 		-w /src/site \
 		${TAG}
