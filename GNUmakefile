@@ -145,7 +145,7 @@ shell:
 	${DOCKER} run --rm -it \
 		-p $(PUBLIC_PORT):4000 \
 		-u `id -u`:`id -g` \
-		-v ${PWD}/bitcoincore.org:/src/gh/pages-gem \
+		-v ${PWD}:/src/gh/pages-gem \
 		-v `realpath ${SITE}`:/src/site \
 		-w /src/site \
 		${TAG} \

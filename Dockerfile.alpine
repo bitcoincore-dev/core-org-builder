@@ -62,11 +62,11 @@ RUN gem install faraday-net_http -v 2.1.0
 RUN gem install faraday -v 1.10.3
 RUN gem install jekyll -v 2.5.3
 
-COPY ./bitcoincore.org/Gemfile /src/gh/pages-gem/Gemfile
+#COPY ./bitcoincore.org/Gemfile /src/gh/pages-gem/Gemfile
 RUN bundle update  --gemfile=/src/gh/pages-gem/Gemfile
 
 RUN echo 'gem: --no-document' >> .gemrc
-RUN echo 'verbose:   true'   >> .gemrc
+RUN echo 'verbose:   true'    >> .gemrc
 RUN echo 'benchmark: false'   >> .gemrc
 RUN echo 'backtrace: true'    >> .gemrc
 RUN bundle config --global jobs `expr $(nproc)`
@@ -136,7 +136,7 @@ RUN bundle config --global jobs `expr $(nproc)`
 # RUN gem install execjs:2.7.0
 
 RUN gem install github-pages:222
-RUN gem install html-proofer:3.19.2
+#RUN gem install html-proofer:3.19.2
 RUN gem install nokogiri:1.12.5
 RUN gem install nokogumbo:2.0.5
 RUN gem install parallel:1.21.0
@@ -156,9 +156,11 @@ RUN bundle config list
 FROM install-gems as copy
 
 COPY . /src/gh/pages-gem
+COPY ./bitcoincore.org/ /src/site
 
 FROM copy as bundle
 RUN bundle install --gemfile=/src/gh/pages-gem/Gemfile
+RUN bundle install --gemfile=/src/site/Gemfile
 # one step to exclude .build_deps from docker cache
 RUN apk add curl
 RUN apk update && apk add ${NOCACHE} --virtual .build_deps \
