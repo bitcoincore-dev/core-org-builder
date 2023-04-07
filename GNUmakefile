@@ -144,7 +144,7 @@ submodules:## 	git submodule update --init --recursive
 image:test image_alpine init
 .PHONY: image_alpine
 image_alpine:
-	${DOCKER} build $(VERBOSE) $(NOCACHE) -t ${TAG} . -f Dockerfile.alpine
+	docker build $(VERBOSE) $(NOCACHE) -t ${TAG} . -f Dockerfile.alpine
 	#${DOCKER_COMPOSE} build $(VERBOSE) $(NOCACHE) bitcoincore-org
 .PHONY: shell
 shell:
