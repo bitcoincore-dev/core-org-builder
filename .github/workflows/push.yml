@@ -96,7 +96,6 @@ jobs:
       matrix:
         ruby:
           - 2.5.5
-          - 2.5.8
     steps:
       - uses: styfle/cancel-workflow-action@0.8.0
         with:
