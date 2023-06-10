@@ -105,7 +105,7 @@ export DOCKER
 
 ifeq ($(SITE),)
     #SITE       :=  $(PWD)
-    SITE       :=$(HOME)/bitcoincore.org
+    SITE       :=../bitcoincore.org
     export     SITE
     TAG        := $(shell echo $(notdir $(SITE)) | awk '{print tolower($$0)}')
 else
